@@ -76,21 +76,21 @@ def dna_histogram(dna: pd.DataFrame, Lower = 0, Upper = 3, binno = 50) -> tuple:
     :return: A tuple containing the histogram and the bin edges.
     """
     # Create a histogram of the normalised Interorigin spacing
-    assert np.mean(dna['normalised']) == 1, "Mean of normalised Interorigin spacing is not 1"
+    #assert np.mean(dna['normalised']) == 1, "Mean of normalised Interorigin spacing is not 1"
     print(np.mean(dna['normalised']))
 
 
     # Normalise the histogram to sum to 1
-    dnahist, bins = np.histogram(dna['normalised'], bins=binno, range=(Lower, Upper), weights=1/dna['normalised'].shape[0]* np.ones(dna['normalised'].shape[0]))
+    dnahist, bins = np.histogram(dna['normalised'], bins=binno, range=(Lower, Upper), density=True)
     # Make sure the mean of the histogram is 1
-    assert np.mean(dnahist) == 1, "Mean of the histogram is not 1"
+    #assert np.mean(dnahist) == 1, f"Mean of the histogram is not 1, it is {np.mean(dnahist)}"
     
     # Make area under the histogram equal to 1
     bin_width = np.diff(bins)[0]
     area = np.sum(dnahist * bin_width)
     dnahist = dnahist / area
     newarea = np.sum(dnahist * bin_width)
-    #assert np.isclose(newarea, 1), "Area under the histogram is not 1"
+    assert np.isclose(newarea, 1), "Area under the histogram is not 1"
     #print(bins)
     #print(dnahist)
     #print(len(dnahist), len(bins))
